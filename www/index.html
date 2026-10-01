@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+<title>Medora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* Palette: Option 2 (Forest Green & Soft Neutrals) from the shared mockup. Swap these to try another option. */
+:root{
+  --g:#1F6B50;--g2:#164E3B;--gl:#E6F2EA;--bl:#3B82F6;--bll:#EFF6FF;--or:#F59E0B;--orl:#FEF3E2;
+  --red:#EF4444;--redd:#C62F2F;--redl:#FEF2F2;--tx:#26332C;--mut:#6B7A72;--bd:#E3ECE7;--bg:#F6FAF8;
+  --disp:'Manrope',system-ui,sans-serif;--body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:var(--body);color:var(--tx);background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+h1,h2,h3{font-family:var(--disp)}
+header{background:linear-gradient(160deg,var(--g),var(--g2));color:#fff;padding:calc(env(safe-area-inset-top,0px) + 18px) 18px 34px;flex:0 0 auto}
+.htop{display:flex;align-items:center;gap:10px}
+.avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+header h1{font-size:19px;font-weight:700;line-height:1.2}
+header p{font-size:12.5px;opacity:.82;margin-top:1px}
+main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 100px;margin-top:-20px}
+h2{font-size:16px;font-weight:700;letter-spacing:-.1px}
+p{line-height:1.45}
+.mut{color:var(--mut);font-size:13px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(20,50,40,.04)}
+.card.hero{padding:18px}
+.icircle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.icircle.g{background:var(--gl);color:var(--g)}.icircle.bl{background:var(--bll);color:var(--bl)}
+.icircle.red{background:var(--redl);color:var(--redd)}.icircle.or{background:var(--orl);color:#B45309}
+.btn{display:block;width:100%;border:0;border-radius:13px;background:var(--g);color:#fff;font-size:15.5px;font-weight:700;padding:14px;margin-top:10px;font-family:var(--body)}
+.btn.alt{background:var(--gl);color:var(--g)}.btn.danger{background:var(--redl);color:var(--redd)}
+.btn.sm{display:inline-block;width:auto;padding:8px 16px;font-size:13.5px;margin-top:8px}
+.btn.ghost{background:transparent;color:var(--g);border:1.5px solid var(--gl)}
+.bar{height:9px;background:var(--gl);border-radius:6px;overflow:hidden;margin:9px 0 5px}.bar i{display:block;height:100%;background:var(--g);border-radius:6px}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+.tile{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px 4px 12px;text-align:center;font-size:11.5px;font-weight:700;color:var(--tx);display:flex;flex-direction:column;align-items:center;gap:7px}
+.tile .icircle{width:40px;height:40px}
+.status{display:flex;gap:12px}
+.status .icircle{margin-top:1px}
+.status h2{font-size:14.5px;margin-bottom:2px}
+.status p{font-size:12.8px;color:var(--mut)}
+label{display:block;font-size:12.8px;font-weight:700;margin:12px 0 5px;color:var(--tx)}
+input,select{width:100%;border:1px solid var(--bd);border-radius:11px;padding:11px;font-size:16px;background:#fcfdfc;color:var(--tx);font-family:var(--body)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--gl);color:var(--g);border-radius:20px;padding:6px 8px 6px 12px;font-size:13px;font-weight:600;margin:0 6px 6px 0}
+.chip button{background:none;border:0;color:var(--g);display:flex;padding:2px}
+.opts{display:flex;gap:7px}.opt{flex:1;border:1.5px solid var(--bd);border-radius:12px;background:#fff;padding:11px 2px;font-size:12.5px;text-align:center;font-weight:600;color:var(--tx)}
+.opt.on{border-color:var(--g);background:var(--gl);color:var(--g)}
+.opt svg{display:block;margin:0 auto 4px}
+.sev{display:flex;gap:6px}.sev button{flex:1;border:1.5px solid var(--bd);background:#fff;border-radius:10px;padding:9px 0;font-size:12px;font-weight:700;color:var(--mut)}
+.sev button.on{background:var(--g);border-color:var(--g);color:#fff}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;background:none;padding:9px 0 7px;font-size:10.5px;color:#9CAAA3;display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:600}
+nav button.on{color:var(--g)}
+.empty{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 6px 40px}
+.empty .icircle{width:76px;height:76px;margin-bottom:16px}
+.empty h1{font-size:25px;font-weight:800;margin-bottom:6px}
+.empty p{color:var(--mut);max-width:280px;margin-bottom:4px}
+.chartcard .lbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.chart{display:flex;align-items:flex-end;gap:7px;height:72px;margin-top:8px}
+.chart div{flex:1;text-align:center;font-size:9.5px;color:var(--mut);display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.chart i{display:block;border-radius:5px 5px 0 0;margin-bottom:3px;min-height:4px}
+.remedit{position:absolute;top:14px;right:14px;color:var(--mut)}
+.card{position:relative}
+#alarm{position:fixed;inset:0;z-index:99;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;color:#fff;background:linear-gradient(165deg,var(--red),var(--redd))}
+#alarm .ic{animation:ring 1s infinite}
+@keyframes ring{0%,100%{transform:rotate(0)}25%{transform:rotate(14deg)}75%{transform:rotate(-14deg)}}
+#alarm h1{font-family:var(--disp);font-size:24px;margin:16px 0 6px}#alarm p{font-size:16px;opacity:.95}
+#alarm button{width:100%;max-width:340px;border:0;border-radius:14px;padding:16px;font-size:17px;font-weight:700;margin-top:12px;background:#fff;color:var(--redd);font-family:var(--body)}
+#alarm button.o{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.7);font-weight:600;font-size:15px}
+#alarm.appt{background:linear-gradient(165deg,var(--bl),#1D4ED8)}
+#alarm.appt button{color:#1D4ED8}
+@media (prefers-reduced-motion:reduce){#alarm .ic{animation:none}}
+#alarm.appt{background:linear-gradient(165deg,var(--bl),#1D4ED8)}
+#alarm.appt button{color:#1D4ED8}
+/* Splash screen (shown first, like a WhatsApp-style launch screen) */
+#splash{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,var(--g),var(--g2));color:#fff;transition:opacity .4s ease}
+#splash.hide{opacity:0;pointer-events:none}
+#splash .logo{width:88px;height:88px;border-radius:26px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+#splash h1{font-family:var(--disp);font-size:26px;font-weight:800;letter-spacing:.2px}
+#splash p{font-size:12.5px;opacity:.8;margin-top:4px}
+/* First-run: ask the patient's own name */
+#onboard{position:fixed;inset:0;z-index:150;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center}
+#onboard .icircle{width:64px;height:64px;margin-bottom:16px}
+#onboard h1{font-family:var(--disp);font-size:23px;font-weight:800;margin-bottom:6px}
+#onboard p{color:var(--mut);margin-bottom:16px;max-width:280px}
+#onboard input{max-width:280px;text-align:center;font-size:17px}
+#onboard .btn{max-width:280px;margin-top:14px}
+</style>
+</head>
+<body>
+<div id="splash">
+  <div class="logo"><img src="assets/icon.png" alt="Medora" style="width:64px;height:64px;border-radius:16px" onerror="this.style.display='none'"></div>
+  <h1>Medora</h1>
+  <p>Your treatment, on track</p>
+</div>
+<div id="onboard" style="display:none">
+  <div class="icircle g"><img src="assets/icon.png" alt="" style="width:44px;height:44px;border-radius:11px" onerror="this.style.display='none'"></div>
+  <h1>Welcome to Medora</h1>
+  <p>What should we call you?</p>
+  <input id="nameIn" placeholder="Your name" onkeydown="if(event.key==='Enter'){saveName();event.preventDefault()}">
+  <button class="btn" onclick="saveName()">Continue</button>
+</div>
+<header><div class="htop"><div class="avatar" id="av"></div><div><h1 id="ht">Medora</h1><p id="hs">Your treatment, on track</p></div></div></header>
+<main id="main"></main>
+<nav id="nav"></nav>
+<div id="alarm"></div>
+<script src="cordova.js"></script>
+<script>
+var CONFIG={APP_NAME:'Medora'};
+/* ---------------- Icons: inline SVG, no emoji, no external icon font ---------------- */
+var PATHS={
+ leaf:'<path d="M11 20A7 7 0 0 1 4 13c0-6 7-11 15-11 0 8-5 15-11 15h-1z"></path><path d="M4 13c5 0 9-3 13-9"></path>',
+ home:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>',
+ pill:'<rect x="3.5" y="9.5" width="17" height="5" rx="2.5" transform="rotate(45 12 12)"></rect><line x1="8.5" y1="15.5" x2="15.5" y2="8.5"></line>',
+ chart:'<line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>',
+ pin:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>',
+ bell:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.7 21a2 2 0 0 1-3.4 0"></path>',
+ check:'<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"></path><polyline points="22 4 12 14 9 11"></polyline>',
+ warn:'<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h16.9a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><circle cx="12" cy="17" r=".1"></circle>',
+ info:'<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><circle cx="12" cy="8" r=".1"></circle>',
+ plus:'<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line>',
+ trash:'<polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>',
+ x:'<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>',
+ clock:'<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>',
+ smile:'<circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><circle cx="9" cy="9" r=".1"></circle><circle cx="15" cy="9" r=".1"></circle>',
+ meh:'<circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><circle cx="9" cy="9" r=".1"></circle><circle cx="15" cy="9" r=".1"></circle>',
+ frown:'<circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><circle cx="9" cy="9" r=".1"></circle><circle cx="15" cy="9" r=".1"></circle>',
+ heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1a5.5 5.5 0 0 0-7.8 7.8L4.3 13.6 12 21.2l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.9z"></path>',
+ chev:'<polyline points="9 18 15 12 9 6"></polyline>',
+ edit:'<path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>',
+ calendar:'<rect x="3" y="4.5" width="18" height="16" rx="2.5"></rect><line x1="16" y1="2.5" x2="16" y2="6.5"></line><line x1="8" y1="2.5" x2="8" y2="6.5"></line><line x1="3" y1="10" x2="21" y2="10"></line>'
+};
+function I(n,s,st){return '<svg width="'+(s||20)+'" height="'+(s||20)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="'+(st||'')+'">'+PATHS[n]+'</svg>'}
+$=function(s){return document.querySelector(s)};
+$('#av').innerHTML='<img src="assets/icon.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display=\'none\'">';
+
+/* ---------------- State ---------------- */
+var K='medreminder_v2',tab='home',D=null,fired={};
+var S=JSON.parse(localStorage.getItem(K)||'null')||{t:null,meds:[],log:{},ci:{},sentAlerts:{},user:null,appts:[]};
+if(!S.appts)S.appts=[]; // safety for state saved before appointments existed
+function save(){localStorage.setItem(K,JSON.stringify(S))}
+function pad(n){return String(n).padStart(2,'0')}
+function dstr(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function parseD(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])}
+function addDays(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var DEF={1:['08:00'],2:['08:00','20:00'],3:['08:00','14:00','20:00'],4:['07:00','12:00','17:00','22:00']};
+var SEV=['None','Mild','Moderate','High','Severe'];
+
+/* ---------------- Data helpers ---------------- */
+function doses(){
+  if(!S.t)return[];var st=parseD(S.t.start),out=[];
+  S.meds.forEach(function(m){for(var i=0;i<m.days;i++)m.times.forEach(function(t){
+    var h=t.split(':'),d=addDays(st,i);d.setHours(+h[0],+h[1],0,0);
+    out.push({key:m.id+'|'+dstr(d)+'|'+t,med:m,at:d});
+  })});
+  return out.sort(function(a,b){return a.at-b.at});
+}
+function findDose(k){return doses().filter(function(d){return d.key===k})[0]}
+function mark(k,status){
+  var d=findDose(k);if(!d)return;
+  if(status==='taken'&&S.log[k]!=='taken'&&d.med.pills>0)d.med.pills--;
+  S.log[k]=status;save();schedule();
+}
+function treatDay(){
+  var today=parseD(dstr(new Date())),n=Math.round((today-parseD(S.t.start))/864e5)+1;
+  return Math.min(S.t.days,Math.max(1,n));
+}
+function greet(){var h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening'}
+function alerts(){
+  var out=[],now=Date.now(),today=parseD(dstr(new Date()));
+  S.meds.forEach(function(m){
+    var left=doses().filter(function(d){return d.med===m&&!S.log[d.key]&&d.at>now}).length;
+    if(m.pills!=null&&m.pills<left)out.push({id:m.id+'-refill',w:2,ic:'warn',h:'Refill needed: '+esc(m.name),t:'Only '+m.pills+' pill(s) left for '+left+' remaining doses.',act:'pin'});
+    var dl=Math.round((addDays(parseD(S.t.start),m.days-1)-today)/864e5);
+    if(m.days<S.t.days&&dl>=0&&dl<=1)out.push({id:m.id+'-ending','w':1,ic:'info',h:esc(m.name)+' ends '+(dl?'tomorrow':'today'),t:'Keep taking your other medicines until day '+S.t.days+'.'});
+  });
+  return out;
+}
+/* ---------------- Appointments ---------------- */
+function apptDT(a){var p=a.date.split('-').map(Number),d=new Date(p[0],p[1]-1,p[2]),h=(a.time||'09:00').split(':');d.setHours(+h[0],+h[1],0,0);return d}
+function upcomingAppts(){return (S.appts||[]).filter(function(a){return a.status==='upcoming'}).sort(function(x,y){return apptDT(x)-apptDT(y)})}
+function nextAppt(){var now=Date.now();return upcomingAppts().filter(function(a){return apptDT(a).getTime()>now-21600000})[0]} // small grace window so a same-day appt doesn't vanish the moment its time passes
+
+/* ---------------- Notifications ---------------- */
+function LN(){return window.cordova&&cordova.plugins&&cordova.plugins.notification&&cordova.plugins.notification.local}
+function schedule(){
+  var N=LN();
+  if(N)N.cancelAll(function(){
+    var now=Date.now(),lim=now+7*864e5,list=[];
+    doses().forEach(function(d,i){
+      var at=d.at.getTime()-300000;
+      if(at>now&&at<lim&&!S.log[d.key])list.push({id:i+1,title:'Dose in 5 minutes',text:d.med.name+' '+(d.med.dose||''),trigger:{at:new Date(at)},foreground:true,priority:2,vibrate:true,wakeup:true,lockscreen:true,data:{key:d.key}});
+    });
+    (S.appts||[]).forEach(function(a,ai){
+      if(a.status!=='upcoming')return;
+      var dt=apptDT(a);if(dt.getTime()<now)return;
+      var day0=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
+      var who=(a.doctor?('Dr. '+a.doctor+' — '):'')+a.purpose+(a.hospital?(' at '+a.hospital):'');
+      [3,2,1].forEach(function(daysBefore,ti){
+        var trig=new Date(day0);trig.setDate(trig.getDate()-daysBefore);trig.setHours(9,0,0,0);
+        if(trig.getTime()>now&&trig.getTime()<lim)list.push({id:300000+ai*30+ti,title:'Appointment in '+daysBefore+' day'+(daysBefore>1?'s':''),text:who,trigger:{at:trig},foreground:true,vibrate:true,data:{apptId:a.id}});
+      });
+      var morn=new Date(day0);morn.setHours(8,0,0,0);
+      var oneHr=new Date(dt.getTime()-3600000);
+      [morn,oneHr].forEach(function(trig,ti){
+        if(trig.getTime()>now&&trig.getTime()<dt.getTime()&&trig.getTime()<lim)list.push({id:300000+ai*30+10+ti,title:'Appointment today',text:who+' at '+pad(dt.getHours())+':'+pad(dt.getMinutes()),trigger:{at:trig},foreground:true,vibrate:true,data:{apptId:a.id}});
+      });
+      var alarmAt=new Date(dt.getTime()-1800000);
+      if(alarmAt.getTime()>now&&alarmAt.getTime()<lim)list.push({id:300000+ai*30+20,title:'Appointment in 30 minutes',text:who,trigger:{at:alarmAt},foreground:true,priority:2,vibrate:true,wakeup:true,lockscreen:true,data:{apptId:a.id,type:'alarm'}});
+    });
+    if(list.length)N.schedule(list);
+  });
+  notifyAlerts();
+}
+function notifyAlerts(){
+  var N=LN();if(!N)return;
+  var list=[];
+  alerts().forEach(function(a){
+    if(S.sentAlerts[a.id])return;
+    S.sentAlerts[a.id]=1;
+    list.push({id:5000+Math.floor(Math.random()*4000),title:a.h,text:a.t,trigger:{at:new Date(Date.now()+4000)},foreground:true,priority:1,vibrate:true});
+  });
+  if(list.length){N.schedule(list);save()}
+}
+function initNotif(){
+  var N=LN();if(!N)return;
+  if(N.requestPermission)N.requestPermission(function(){});
+  N.on('click',function(n){var d=n.data;if(typeof d==='string')try{d=JSON.parse(d)}catch(e){}
+    if(d&&d.key)openAlarm(d.key);
+    else if(d&&d.apptId&&d.type==='alarm')openApptAlarm(d.apptId);
+    else if(d&&d.apptId){go('appts')}
+  });
+  schedule();
+}
+
+/* ---------------- Alarm ---------------- */
+var snd=null,ringT=null;
+function beep(){
+  try{var C=window.AudioContext||window.webkitAudioContext;snd=snd||new C();var o=snd.createOscillator(),g=snd.createGain();
+  o.frequency.value=880;g.gain.value=.25;o.connect(g);g.connect(snd.destination);o.start();o.stop(snd.currentTime+.25)}catch(e){}
+  if(navigator.vibrate)navigator.vibrate([300,150,300]);
+}
+function openAlarm(k){
+  var d=findDose(k);if(!d)return;
+  var a=$('#alarm');a.classList.remove('appt');a.style.display='flex';
+  a.innerHTML='<div class="ic">'+I('bell',60)+'</div><h1>Time for '+esc(d.med.name)+'</h1><p>'+esc(d.med.dose||'')+'</p><p>Dose at '+pad(d.at.getHours())+':'+pad(d.at.getMinutes())+' (in 5 minutes)</p>'
+   +'<button onclick="ans(\''+k+'\',\'taken\')">'+I('check',18,'vertical-align:-3px;margin-right:6px')+'Taken</button>'
+   +'<button class="o" onclick="ans(\''+k+'\',\'snooze\')">Remind me in 10 min</button>'
+   +'<button class="o" onclick="ans(\''+k+'\',\'skipped\')">Skip this dose</button>';
+  clearInterval(ringT);beep();ringT=setInterval(beep,2000);
+}
+function ans(k,s){
+  clearInterval(ringT);$('#alarm').style.display='none';
+  if(s==='snooze'){setTimeout(function(){openAlarm(k)},600000);var N=LN();if(N)N.schedule({id:9000+Math.floor(Math.random()*900),title:'Reminder',text:'Your medicine is due soon',trigger:{at:new Date(Date.now()+600000)},foreground:true,data:{key:k}})}
+  else mark(k,s);
+  render();
+}
+function openApptAlarm(id){
+  var a=(S.appts||[]).filter(function(x){return x.id===id})[0];if(!a)return;
+  var d=apptDT(a),el=$('#alarm');el.classList.add('appt');el.style.display='flex';
+  el.innerHTML='<div class="ic">'+I('calendar',60)+'</div><h1>Appointment in 30 minutes</h1><p>'+(a.doctor?('Dr. '+esc(a.doctor)):'')+(a.purpose?(' — '+esc(a.purpose)):'')+'</p><p>'+(a.hospital?esc(a.hospital)+' &middot; ':'')+pad(d.getHours())+':'+pad(d.getMinutes())+'</p>'
+   +'<button onclick="apptAns(\''+id+'\',\'ok\')">'+I('check',18,'vertical-align:-3px;margin-right:6px')+"Got it, getting ready</button>"
+   +'<button class="o" onclick="apptAns(\''+id+'\',\'snooze\')">Remind me in 10 min</button>';
+  clearInterval(ringT);beep();ringT=setInterval(beep,2000);
+}
+function apptAns(id,s){
+  clearInterval(ringT);var el=$('#alarm');el.style.display='none';el.classList.remove('appt');
+  if(s==='snooze')setTimeout(function(){openApptAlarm(id)},600000);
+  render();
+}
+setInterval(function(){
+  var now=Date.now();
+  doses().forEach(function(d){var at=d.at.getTime()-300000;
+    if(now>=at&&now<at+60000&&!S.log[d.key]&&!fired[d.key]){fired[d.key]=1;openAlarm(d.key)}});
+  (S.appts||[]).forEach(function(a){
+    if(a.status!=='upcoming')return;
+    var at=apptDT(a).getTime()-1800000,fk='appt-'+a.id;
+    if(now>=at&&now<at+60000&&!fired[fk]){fired[fk]=1;openApptAlarm(a.id)}
+  });
+  notifyAlerts();
+},15000);
+
+/* ---------------- Views ---------------- */
+function nextApptCard(){
+  var na=nextAppt();if(!na)return '';
+  var d=apptDT(na);
+  return '<div class="card"><div class="status"><div class="icircle bl">'+I('calendar',20)+'</div><div><div class="mut">Next appointment</div><h2>'+esc(na.purpose)+'</h2><p>'+(na.doctor?('Dr. '+esc(na.doctor)+' '):'')+(na.hospital?('&middot; '+esc(na.hospital)):'')+'</p><p>'+d.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})+' at '+pad(d.getHours())+':'+pad(d.getMinutes())+'</p></div></div></div>';
+}
+function emptyState(title,desc,btnHtml){
+  return '<div class="empty"><div class="icircle g"><img src="assets/icon.png" alt="" style="width:42px;height:42px;border-radius:10px" onerror="this.style.display=\'none\'"></div><h1>'+title+'</h1><p>'+desc+'</p>'+(btnHtml||'')+'</div>';
+}
+function home(){
+  if(!S.t)return emptyState('Let\'s set up your treatment','Add your prescription once, and Medora takes care of the alarms, refill warnings and your daily progress.','<button class="btn" style="max-width:260px" onclick="openForm()">'+I('plus',18,'vertical-align:-3px;margin-right:6px')+'Add my prescription</button>')+nextApptCard();
+  var day=treatDay(),pct=Math.round(day/S.t.days*100),now=Date.now();
+  var nx=doses().filter(function(d){return !S.log[d.key]&&d.at.getTime()>now-1800000})[0];
+  var h='<div class="card hero"><h2>'+esc(S.t.name)+'</h2><div class="mut">Day '+day+' of '+S.t.days+'</div><div class="bar"><i style="width:'+pct+'%"></i></div><div class="row" style="margin-top:2px"><span class="mut">'+pct+'% complete</span></div></div>';
+  h+=nx?'<div class="card"><div class="status"><div class="icircle g">'+I('clock',20)+'</div><div><div class="mut">Next dose</div><h2>'+esc(nx.med.name)+' '+esc(nx.med.dose||'')+'</h2><p>'+nx.at.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})+' at '+pad(nx.at.getHours())+':'+pad(nx.at.getMinutes())+'</p><button class="btn sm alt" onclick="mark(\''+nx.key+'\',\'taken\');render()">Mark as taken</button></div></div></div>'
+    :'<div class="card"><div class="status"><div class="icircle g">'+I('check',20)+'</div><div><h2>All doses done</h2><p class="mut">No upcoming doses right now.</p></div></div></div>';
+  h+=nextApptCard();
+  alerts().forEach(function(a){h+='<div class="card"><div class="status"><div class="icircle '+(a.w>1?'red':'bl')+'">'+I(a.ic,20)+'</div><div><h2>'+a.h+'</h2><p>'+a.t+'</p>'+(a.act==='pin'?'<button class="btn sm ghost" onclick="go(\'pharm\')">'+I('pin',15,'vertical-align:-2px;margin-right:5px')+'Find nearby pharmacies</button>':'')+'</div></div></div>'});
+  h+='<div class="tiles">'
+    +'<div class="tile" onclick="go(\'treat\')"><div class="icircle g">'+I('pill',20)+'</div>Medications</div>'
+    +'<div class="tile" onclick="go(\'appts\')"><div class="icircle g">'+I('calendar',20)+'</div>Appointments</div>'
+    +'<div class="tile" onclick="go(\'prog\')"><div class="icircle g">'+I('chart',20)+'</div>Progress</div>'
+    +'<div class="tile" onclick="go(\'pharm\')"><div class="icircle g">'+I('pin',20)+'</div>Pharmacies</div>'
+    +'</div>';
+  return h;
+}
+function pharm(){
+  return '<div class="card"><div class="icircle bl" style="margin-bottom:10px">'+I('pin',20)+'</div><h2>Pharmacy locator</h2><p class="mut">Comes with the next build step, once accounts and the shared pharmacy database are connected.</p></div>';
+}
+function treat(){
+  var h='';
+  if(S.t){
+    h+='<div class="card"><h2>'+esc(S.t.name)+'</h2><div class="mut">Starts '+S.t.start+' &middot; '+S.t.days+' days</div>'+(S.t.symptoms&&S.t.symptoms.length?'<div style="margin-top:10px">'+S.t.symptoms.map(function(s){return '<span class="chip" style="cursor:default;padding:6px 12px">'+esc(s)+'</span>'}).join('')+'</div>':'')+'</div>';
+    S.meds.forEach(function(m){h+='<div class="card"><div class="status"><div class="icircle g">'+I('pill',18)+'</div><div><h2>'+esc(m.name)+'</h2><p class="mut">'+esc(m.dose||'')+'</p><p class="mut">'+m.times.join(', ')+' &middot; '+m.days+' days'+(m.pills!=null?' &middot; '+m.pills+' left':'')+'</p></div></div></div>'});
+    h+='<button class="btn alt" onclick="openForm()">'+I('edit',16,'vertical-align:-2px;margin-right:6px')+'Edit prescription</button><button class="btn danger" onclick="if(confirm(\'Delete this treatment and all its history?\')){S={t:null,meds:[],log:{},ci:S.ci,sentAlerts:{},user:S.user,appts:S.appts};save();schedule();render()}">'+I('trash',16,'vertical-align:-2px;margin-right:6px')+'Delete treatment</button>';
+  }else h=emptyState('No prescription yet','Enter your prescription exactly as your doctor wrote it.','<button class="btn" style="max-width:260px" onclick="openForm()">Add my prescription</button>');
+  return h;
+}
+function openForm(){
+  D=S.t?{name:S.t.name,start:S.t.start,days:S.t.days,symptoms:(S.t.symptoms||[]).slice(),meds:JSON.parse(JSON.stringify(S.meds))}
+       :{name:'',start:dstr(new Date()),days:7,symptoms:[],meds:[{name:'',dose:'',days:7,pills:null,times:['08:00']}]};
+  tab='form';render();
+}
+function form(){
+  var h='<div class="card"><h2>Prescription</h2><label>Treatment name</label><input value="'+esc(D.name)+'" placeholder="e.g. Malaria treatment" oninput="D.name=this.value">'
+   +'<div class="row"><div><label>Start date</label><input type="date" value="'+D.start+'" oninput="D.start=this.value"></div><div><label>Total days</label><input type="number" min="1" value="'+D.days+'" oninput="D.days=+this.value"></div></div>'
+   +'<label>Symptoms to track</label><div class="mut" style="margin-bottom:6px">Add the symptoms of your illness. The app will track how each one changes day to day.</div>'
+   +'<div>'+D.symptoms.map(function(s,i){return '<span class="chip">'+esc(s)+'<button onclick="D.symptoms.splice('+i+',1);render()">'+I('x',12)+'</button></span>'}).join('')+'</div>'
+   +'<div class="row"><input id="symIn" placeholder="e.g. Fever, Headache" onkeydown="if(event.key===\'Enter\'){addSym();event.preventDefault()}"><button class="btn sm alt" style="flex:0 0 auto" onclick="addSym()">Add</button></div>'
+   +'</div>';
+  D.meds.forEach(function(m,i){
+    h+='<div class="card"><h2>Medicine '+(i+1)+'</h2><label>Name</label><input value="'+esc(m.name)+'" placeholder="e.g. Amoxicillin" oninput="D.meds['+i+'].name=this.value">'
+     +'<label>Dose</label><input value="'+esc(m.dose)+'" placeholder="e.g. 500 mg, 1 tablet" oninput="D.meds['+i+'].dose=this.value">'
+     +'<div class="row"><div><label>Days to take</label><input type="number" min="1" value="'+m.days+'" oninput="D.meds['+i+'].days=+this.value"></div>'
+     +'<div><label>Pills in box</label><input type="number" min="0" value="'+(m.pills==null?'':m.pills)+'" oninput="D.meds['+i+'].pills=this.value===\'\'?null:+this.value"></div></div>'
+     +'<label>Times per day</label><select onchange="D.meds['+i+'].times=DEF[this.value].slice();render()">'+[1,2,3,4].map(function(n){return '<option'+(m.times.length===n?' selected':'')+'>'+n+'</option>'}).join('')+'</select>'
+     +'<div class="row" style="margin-top:8px">'+m.times.map(function(t,j){return '<input type="time" value="'+t+'" oninput="D.meds['+i+'].times['+j+']=this.value">'}).join('')+'</div>'
+     +(D.meds.length>1?'<button class="btn sm danger" onclick="D.meds.splice('+i+',1);render()">'+I('trash',14,'vertical-align:-2px;margin-right:5px')+'Remove</button>':'')+'</div>';
+  });
+  return h+'<button class="btn alt" onclick="D.meds.push({name:\'\',dose:\'\',days:D.days,pills:null,times:[\'08:00\']});render()">'+I('plus',16,'vertical-align:-2px;margin-right:6px')+'Add another medicine</button><button class="btn" onclick="saveForm()">Save and set alarms</button><button class="btn alt" onclick="go(\'home\')">Cancel</button>';
+}
+function addSym(){var v=$('#symIn').value.trim();if(v&&D.symptoms.indexOf(v)===-1)D.symptoms.push(v);render();var i=$('#symIn');if(i)i.focus()}
+function saveForm(){
+  if(!D.name.trim()||!D.days||D.days<1)return alert('Enter a treatment name and the total number of days.');
+  for(var i=0;i<D.meds.length;i++){var m=D.meds[i];if(!m.name.trim()||!m.days||m.days<1||m.times.some(function(t){return !t}))return alert('Complete every medicine: name, days and times.')}
+  D.meds.forEach(function(m,i){m.id=m.id||('m'+Date.now()+i);m.days=Math.min(m.days,D.days)});
+  S.t={name:D.name.trim(),start:D.start,days:D.days,symptoms:D.symptoms};S.meds=D.meds;S.log={};S.sentAlerts={};save();schedule();go('home');
+}
+function check(){
+  if(!S.t)return emptyState('No treatment yet','Add a prescription first so Medora knows what to check in about.','<button class="btn" style="max-width:260px" onclick="go(\'treat\')">Go to Medications</button>');
+  var k=dstr(new Date()),c=S.ci[k]||{symptoms:{}};c.symptoms=c.symptoms||{};
+  function opts(f,a){return '<div class="opts">'+a.map(function(o){return '<div class="opt'+(c[f]===o[0]?' on':'')+'" onclick="ci(\''+f+'\',\''+o[0]+'\')">'+(o[2]?I(o[2],20):'')+o[1]+'</div>'}).join('')+'</div>'}
+  var h='<div class="card"><h2>Daily check-in</h2><div class="mut">Takes 20 seconds. Your doctor can see the summary.</div>'
+   +'<label>Did you take all your medicines today?</label>'+opts('taken',[['yes','Yes'],['some','Some'],['no','No']])
+   +'<label>Did you eat anything outside your diet?</label>'+opts('diet',[['no','No'],['yes','Yes'],['na','No diet']])
+   +'<label>How do you feel?</label>'+opts('feel',[['good','Good','smile'],['okay','Okay','meh'],['bad','Not well','frown']])
+   +'</div>';
+  if(S.t.symptoms&&S.t.symptoms.length){
+    h+='<div class="card"><h2>Symptoms today</h2><div class="mut" style="margin-bottom:4px">Rate each one from None to Severe.</div>';
+    S.t.symptoms.forEach(function(s){var v=c.symptoms[s]==null?0:c.symptoms[s];
+      h+='<label>'+esc(s)+' &middot; <span class="mut">'+SEV[v]+'</span></label><div class="sev">'+SEV.map(function(lab,i){return '<button class="'+(v===i?'on':'')+'" onclick="ciSym(\''+esc(s).replace(/'/g,"\\'")+'\','+i+')">'+i+'</button>'}).join('')+'</div>';
+    });
+    h+='</div>';
+  }
+  h+='<div class="mut" style="text-align:center;margin-top:2px">'+(c.taken?'Saved for today &#10003;':'Answers save as you tap.')+'</div>';
+  return h;
+}
+function ci(f,v){var k=dstr(new Date());S.ci[k]=S.ci[k]||{symptoms:{}};S.ci[k][f]=v;save();render()}
+function ciSym(s,v){var k=dstr(new Date());S.ci[k]=S.ci[k]||{symptoms:{}};S.ci[k].symptoms=S.ci[k].symptoms||{};S.ci[k].symptoms[s]=v;save();render()}
+var TCOL=['#1F6B50','#3B82F6','#F59E0B','#C62F2F','#7C3AED','#0EA5A5'];
+function progress(){
+  if(!S.t)return emptyState('No treatment yet','Progress appears here once you add a prescription.','<button class="btn" style="max-width:260px" onclick="go(\'treat\')">Go to Medications</button>');
+  var now=Date.now(),due=doses().filter(function(d){return d.at.getTime()<=now||S.log[d.key]!=null}),tk=due.filter(function(d){return S.log[d.key]==='taken'}).length;
+  var pc=due.length?Math.round(tk/due.length*100):0;
+  var h='<div class="card"><div class="status"><div class="icircle g">'+I('check',20)+'</div><div><div class="mut">Adherence</div><h2 style="font-size:26px">'+(due.length?pc+'%':'&ndash;')+'</h2><p class="mut">'+tk+' of '+due.length+' doses taken so far</p></div></div></div>';
+  if(S.t.symptoms&&S.t.symptoms.length){
+    S.t.symptoms.forEach(function(s,si){
+      var bars='';for(var i=6;i>=0;i--){var d=addDays(new Date(),-i),c=S.ci[dstr(d)],v=c&&c.symptoms?c.symptoms[s]:null;
+        bars+='<div><i style="height:'+(v==null?4:8+v*13)+'px;background:'+(v==null?'var(--bd)':TCOL[si%TCOL.length])+'"></i>'+['Su','Mo','Tu','We','Th','Fr','Sa'][d.getDay()]+'</div>'}
+      var last=null;for(var i=6;i>=0;i--){var d=addDays(new Date(),-i),c=S.ci[dstr(d)];if(c&&c.symptoms&&c.symptoms[s]!=null)last=c.symptoms[s]}
+      h+='<div class="card chartcard"><div class="lbl"><h2>'+esc(s)+'</h2><span class="mut">'+(last==null?'No data yet':SEV[last])+'</span></div><div class="chart">'+bars+'</div></div>';
+    });
+  }else h+='<div class="card"><h2>No symptoms tracked</h2><p class="mut">Add symptoms to your prescription to see their trend here.</p></div>';
+  return h;
+}
+
+var AD=null;
+function appts(){
+  var list=(S.appts||[]).slice().sort(function(a,b){return apptDT(a)-apptDT(b)});
+  if(!list.length)return emptyState('No appointments yet','Add your next hospital visit so Medora can remind you.','<button class="btn" style="max-width:260px" onclick="openApptForm()">'+I('plus',18,'vertical-align:-3px;margin-right:6px')+'Add appointment</button>');
+  var h='<button class="btn" onclick="openApptForm()">'+I('plus',18,'vertical-align:-3px;margin-right:6px')+'Add appointment</button>';
+  list.forEach(function(a){
+    var d=apptDT(a),label=a.status==='attended'?'Attended':a.status==='missed'?'Missed':'Upcoming';
+    var col=a.status==='attended'?'g':a.status==='missed'?'red':'bl';
+    var colVar=a.status==='attended'?'--g':a.status==='missed'?'--redd':'--bl';
+    h+='<div class="card"><div class="status"><div class="icircle '+col+'">'+I('calendar',20)+'</div><div style="flex:1"><h2>'+esc(a.purpose)+'</h2>'
+     +(a.doctor||a.hospital?'<p>'+(a.doctor?('Dr. '+esc(a.doctor)):'')+(a.doctor&&a.hospital?' &middot; ':'')+(a.hospital?esc(a.hospital):'')+'</p>':'')
+     +'<p>'+d.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short',year:'numeric'})+' at '+pad(d.getHours())+':'+pad(d.getMinutes())+'</p>'
+     +(a.notes?'<p class="mut">'+esc(a.notes)+'</p>':'')
+     +'<div style="margin-top:6px;font-weight:700;font-size:12.5px;color:var('+colVar+')">'+label+'</div>'
+     +(a.status==='upcoming'?'<div class="row" style="margin-top:8px"><button class="btn sm alt" onclick="setApptStatus(\''+a.id+'\',\'attended\')">Mark attended</button><button class="btn sm danger" onclick="setApptStatus(\''+a.id+'\',\'missed\')">Mark missed</button></div>':'')
+     +'<div class="row" style="margin-top:6px"><button class="btn sm ghost" onclick="openApptForm(\''+a.id+'\')">'+I('edit',14,'vertical-align:-2px;margin-right:5px')+'Edit</button><button class="btn sm ghost" style="color:var(--redd);border-color:var(--redl)" onclick="deleteAppt(\''+a.id+'\')">'+I('trash',14,'vertical-align:-2px;margin-right:5px')+'Delete</button></div>'
+     +'</div></div></div>';
+  });
+  return h;
+}
+function openApptForm(id){
+  var a=id?(S.appts||[]).filter(function(x){return x.id===id})[0]:null;
+  AD=a?{id:a.id,purpose:a.purpose,doctor:a.doctor,hospital:a.hospital,date:a.date,time:a.time,notes:a.notes||''}
+      :{id:null,purpose:'',doctor:'',hospital:'',date:dstr(new Date()),time:'09:00',notes:''};
+  tab='apptform';render();
+}
+function apptform(){
+  var presets=['Examination','Check-up','Injection','Consultation'];
+  return '<div class="card"><h2>Appointment</h2>'
+   +'<label>Purpose</label><div class="opts">'+presets.map(function(p){return '<div class="opt'+(AD.purpose===p?' on':'')+'" onclick="AD.purpose=\''+p+'\';render()">'+p+'</div>'}).join('')+'</div>'
+   +'<label>Or describe it</label><input value="'+esc(AD.purpose)+'" placeholder="e.g. Follow-up scan" oninput="AD.purpose=this.value">'
+   +'<label>Doctor\'s name</label><input value="'+esc(AD.doctor)+'" placeholder="e.g. Dr. Nkeng" oninput="AD.doctor=this.value">'
+   +'<label>Hospital / clinic</label><input value="'+esc(AD.hospital)+'" placeholder="e.g. Yaound\u00e9 General Hospital" oninput="AD.hospital=this.value">'
+   +'<div class="row"><div><label>Date</label><input type="date" value="'+AD.date+'" oninput="AD.date=this.value"></div><div><label>Time</label><input type="time" value="'+AD.time+'" oninput="AD.time=this.value"></div></div>'
+   +'<label>Notes (optional)</label><input value="'+esc(AD.notes)+'" placeholder="e.g. Bring previous results" oninput="AD.notes=this.value">'
+   +'</div><button class="btn" onclick="saveAppt()">Save appointment</button><button class="btn alt" onclick="go(\'appts\')">Cancel</button>';
+}
+function saveAppt(){
+  if(!AD.purpose.trim()||!AD.date||!AD.time)return alert('Enter at least the purpose, date and time.');
+  S.appts=S.appts||[];
+  if(AD.id){var a=S.appts.filter(function(x){return x.id===AD.id})[0];a.purpose=AD.purpose.trim();a.doctor=AD.doctor.trim();a.hospital=AD.hospital.trim();a.date=AD.date;a.time=AD.time;a.notes=AD.notes.trim();}
+  else S.appts.push({id:'a'+Date.now(),purpose:AD.purpose.trim(),doctor:AD.doctor.trim(),hospital:AD.hospital.trim(),date:AD.date,time:AD.time,notes:AD.notes.trim(),status:'upcoming'});
+  save();schedule();go('appts');
+}
+function setApptStatus(id,s){var a=(S.appts||[]).filter(function(x){return x.id===id})[0];if(a){a.status=s;save();schedule();render()}}
+function deleteAppt(id){if(!confirm('Delete this appointment?'))return;S.appts=(S.appts||[]).filter(function(a){return a.id!==id});save();schedule();render()}
+
+/* ---------------- Navigation ---------------- */
+var TABS=[['home','home','Home'],['treat','pill','Meds'],['appts','calendar','Appts'],['check','check','Check-in'],['prog','chart','Progress']];
+function go(t){tab=t;render()}
+function render(){
+  var V={home:home,treat:treat,form:form,check:check,prog:progress,pharm:pharm,appts:appts,apptform:apptform};
+  var T={home:greet()+(S.user&&S.user.name?', '+esc(S.user.name):''),treat:'My treatment',form:'Prescription',check:'Daily check-in',prog:'My progress',pharm:'Pharmacies',appts:'Appointments',apptform:'Appointment'};
+  $('#ht').textContent=T[tab];$('#hs').textContent=S.t&&tab==='home'?'Day '+treatDay()+' of '+S.t.days:'Your treatment, on track';
+  $('#main').innerHTML=V[tab]();
+  $('#nav').innerHTML=TABS.map(function(t){return '<button class="'+(t[0]===tab?'on':'')+'" onclick="go(\''+t[0]+'\')">'+I(t[1],20)+t[2]+'</button>'}).join('');
+}
+function saveName(){
+  var v=$('#nameIn').value.trim();
+  if(!v)return alert('Please enter your name.');
+  S.user={name:v};save();
+  $('#onboard').style.display='none';
+  render();
+}
+function boot(){
+  render(); // draw whatever's underneath so it's ready the instant the splash clears
+  setTimeout(function(){
+    $('#splash').classList.add('hide');
+    setTimeout(function(){
+      $('#splash').style.display='none';
+      if(!S.user||!S.user.name){$('#onboard').style.display='flex';$('#nameIn').focus()}
+    },400);
+  },1400);
+}
+boot();
+document.addEventListener('deviceready',initNotif,false);
+</script>
+</body>
+</html>
